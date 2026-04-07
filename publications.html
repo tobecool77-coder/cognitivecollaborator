@@ -1,102 +1,416 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Publications | Kyungri Kim</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Publications | Kyungri Kim</title>
+  <style>
+    /* ── Reset & base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fafaf8;
+      --surface: #ffffff;
+      --border: #e8e4de;
+      --text: #1a1a18;
+      --muted: #6b6b64;
+      --accent: #2d4a3e;
+      --accent-light: #e8f0ec;
+      --tag-bg: #f0ede8;
+      --tag-text: #4a4a42;
+      --invited-bg: #fff8e6;
+      --invited-border: #d4a017;
+      --pipeline-bg: #f4f0fa;
+      --pipeline-border: #7c5cbf;
+      --font-display: 'Georgia', 'Times New Roman', serif;
+      --font-body: 'Palatino Linotype', 'Palatino', 'Book Antiqua', Georgia, serif;
+      --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Nav ───────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250, 250, 248, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: normal;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-brand em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--accent); }
+
+    /* ── Page header ───────────────────────────────────────────── */
+    .page-header {
+      padding: 4rem 2rem 2.5rem;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-label {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      font-weight: normal;
+      line-height: 1.2;
+      color: var(--text);
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    /* ── Main content ──────────────────────────────────────────── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* ── Section headings ──────────────────────────────────────── */
+    .section-label {
+      font-family: var(--font-ui);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+
+    .section-group {
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── Paper cards ───────────────────────────────────────────── */
+    .paper-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.6rem 1.8rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .paper-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      border-color: #cdc8c0;
+    }
+
+    /* Invited / special variants */
+    .paper-card.invited {
+      border-left: 3px solid var(--invited-border);
+      background: linear-gradient(to right, var(--invited-bg) 0%, var(--surface) 60%);
+    }
+
+    .paper-card.pipeline {
+      border-left: 3px solid var(--pipeline-border);
+      background: linear-gradient(to right, var(--pipeline-bg) 0%, var(--surface) 60%);
+    }
+
+    .paper-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    .journal-name {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .status-badge {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2em 0.7em;
+      border-radius: 20px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+    }
+
+    .status-badge.submitted { background: #e6f0ff; color: #2255aa; }
+    .status-badge.invited   { background: var(--invited-bg); color: #8a6200; border: 1px solid var(--invited-border); }
+    .status-badge.pipeline  { background: var(--pipeline-bg); color: #5a3c9e; }
+    .status-badge.published { background: #e6f5ec; color: #1a6635; }
+
+    .paper-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: normal;
+      line-height: 1.45;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .paper-authors {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .paper-note {
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .paper-year {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-brand {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.72rem; }
+      .page-header, main { padding-left: 1rem; padding-right: 1rem; }
+      .paper-card { padding: 1.2rem 1.2rem; }
+    }
+  </style>
 </head>
 <body>
-<nav class="nav"><div class="nav-i">
-  <div class="brand">Kyungri <em>Kim</em></div>
-  <button class="ham" onclick="document.querySelector('.lks').classList.toggle('open')" aria-label="menu"><span></span><span></span><span></span></button>
-  <div class="lks">
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="research.html">Research</a>
-    <a href="publications.html" class="on">Publications</a>
-    <a href="conferences.html">Conferences</a>
-    <a href="projects.html">Projects</a>
-  </div>
-</div></nav>
 
-<main class="w">
-  <div class="ph0">
-    <div class="kk">Publications</div>
+  <!-- ── Navigation ── -->
+  <nav>
+    <a href="https://cognitivecollaborator.ai/index.html" class="nav-brand">Kyungri <em>Kim</em></a>
+    <ul class="nav-links">
+      <li><a href="https://cognitivecollaborator.ai/index.html">Home</a></li>
+      <li><a href="https://cognitivecollaborator.ai/about.html">About</a></li>
+      <li><a href="https://cognitivecollaborator.ai/research.html">Research</a></li>
+      <li><a href="https://cognitivecollaborator.ai/publications.html" class="active">Publications</a></li>
+      <li><a href="https://cognitivecollaborator.ai/conferences.html">Conferences</a></li>
+      <li><a href="https://cognitivecollaborator.ai/projects.html">Projects</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Page header ── -->
+  <header class="page-header">
+    <p class="page-label">Publications</p>
     <h1>Papers and <em>Works in Progress</em></h1>
-  </div>
+  </header>
 
-  <!-- PUBLISHED -->
-  <div class="kk" style="margin-bottom:12px">Published</div>
-  <div class="pubs" style="margin-bottom:32px">
-    <div class="c pub">
-      <div class="ph2">
-        <h3>Analysis of the Effects of Immersive Virtual Simulation Science Inquiry Learning: Design Based on CAMIL Perspective</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
-          <span class="tg g">Educational Technology Research</span>
-          <span class="tg">2024</span>
-        </div>
-      </div>
-      <p class="mu">Kim, K. R., &amp; Kim, D. H. (2024). <em>Educational Technology Research, 40</em>(4), 915–953.</p>
-    </div>
-    <div class="c pub">
-      <div class="ph2">
-        <h3>The Effects of Elementary Drama Classes Using 3D MUVE on Learners' Self-Expression and Sociality: Focusing on ZEPETO</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
-          <span class="tg g">Journal of Educational Information and Media</span>
-          <span class="tg">2023</span>
-        </div>
-      </div>
-      <p class="mu">Kim, K. R., &amp; Kim, D. H. (2023). <em>The Journal of Educational Information and Media, 29</em>(3), 599–625.</p>
-    </div>
-  </div>
+  <!-- ── Main ── -->
+  <main>
 
-  <!-- UNDER REVIEW -->
-  <div class="kk" style="margin-bottom:12px">Under Review</div>
-  <div class="pubs" style="margin-bottom:32px">
-    <div class="c pub">
-      <div class="ph2">
-        <h3>Uncovering Structural Differences in Peer and AI-Based Debate: A Graph Neural Network Analysis of Argumentation Pathways and Critical Thinking</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
-          <span class="tg">Under Review</span>
-        </div>
-      </div>
-      <p class="mu">Kim, K. R., &amp; Kim, D. H. Manuscript completed.</p>
-    </div>
-    <div class="c pub">
-      <div class="ph2">
-        <h3>From Generative to Creative: Transforming Project-Based Learning with Generative AI for Student-Led Creative Activities</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
-          <span class="tg">Under Review</span>
-        </div>
-      </div>
-      <p class="mu">Kim, K. R., &amp; Kim, D. H. Manuscript completed.</p>
-    </div>
-    <div class="c pub" style="border-left:3px solid var(--gd)">
-      <div class="ph2">
-        <h3>Finding the Balance: A GAM Analysis of Learner-AI Agency Ratio and Self-Directed Learning in K-12 Generative AI Education</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
-          <span class="tg g">ETR&amp;D Special Issue</span>
-          <span class="tg">Invited Full Paper</span>
-        </div>
-      </div>
-      <p class="mu">Kim, K. R. Invited contribution to the <em>Educational Technology Research and Development</em> Special Issue. Manuscript completed.</p>
-    </div>
-  </div>
+    <!-- PUBLISHED -->
+    <section class="section-group">
+      <div class="section-label">Published</div>
 
-</main>
+      <article class="paper-card">
+        <div class="paper-meta-top">
+          <span class="journal-name">Educational Technology Research</span>
+          <span class="paper-year">2024</span>
+          <span class="status-badge published">Published</span>
+        </div>
+        <p class="paper-title">Analysis of the Effects of Immersive Virtual Simulation Science Inquiry Learning: Design Based on CAMIL Perspective</p>
+        <p class="paper-authors">Kim, K. R., &amp; Kim, D. H. (2024). <em>Educational Technology Research, 40</em>(4), 915–953.</p>
+      </article>
 
-<footer>
-  <div class="c ft">
-    <p>Kyungri Kim · Publications</p>
-    <div class="ftl">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="research.html">Research</a>
-      <a href="conferences.html">Conferences</a>
-      <a href="projects.html">Projects</a>
-    </div>
-  </div>
-</footer>
+      <article class="paper-card">
+        <div class="paper-meta-top">
+          <span class="journal-name">Journal of Educational Information and Media</span>
+          <span class="paper-year">2023</span>
+          <span class="status-badge published">Published</span>
+        </div>
+        <p class="paper-title">The Effects of Elementary Drama Classes Using 3D MUVE on Learners' Self-Expression and Sociality: Focusing on ZEPETO</p>
+        <p class="paper-authors">Kim, K. R., &amp; Kim, D. H. (2023). <em>The Journal of Educational Information and Media, 29</em>(3), 599–625.</p>
+      </article>
+    </section>
+
+    <!-- UNDER REVIEW / IN PRESS -->
+    <section class="section-group">
+      <div class="section-label">Under Review / In Press</div>
+
+      <!-- ETR&D Invited -->
+      <article class="paper-card invited">
+        <div class="paper-meta-top">
+          <span class="journal-name">ETR&amp;D Special Issue</span>
+          <span class="status-badge invited">Invited</span>
+        </div>
+        <p class="paper-title">Finding the Balance: A GAM Analysis of Learner-AI Agency Ratio and Self-Directed Learning in K-12 Gen AI Education</p>
+        <p class="paper-authors">Kim, K. R.</p>
+        <p class="paper-note">Invited submission to the <em>Educational Technology Research and Development</em> Special Issue.</p>
+      </article>
+
+      <!-- Computers & Education -->
+      <article class="paper-card">
+        <div class="paper-meta-top">
+          <span class="journal-name">Computers &amp; Education</span>
+          <span class="status-badge submitted">Submitted</span>
+        </div>
+        <p class="paper-title">Uncovering Structural Differences in Peer and AI-Based Debate: A Graph Neural Network Analysis of Argumentation Pathways and Critical Thinking</p>
+        <p class="paper-authors">Kim, K. R., &amp; Kim, D. H.</p>
+      </article>
+
+      <!-- EAIT -->
+      <article class="paper-card">
+        <div class="paper-meta-top">
+          <span class="journal-name">Education and Information Technologies</span>
+          <span class="status-badge submitted">Submitted</span>
+        </div>
+        <p class="paper-title">Learner–AI Cognitive Collaboration for Creativity: A Divergence-Convergence Model in Elementary Project-Based Learning</p>
+        <p class="paper-authors">Kim, K. R., &amp; Kim, D. H.</p>
+      </article>
+
+      <!-- BJET -->
+      <article class="paper-card">
+        <div class="paper-meta-top">
+          <span class="journal-name">British Journal of Educational Technology</span>
+          <span class="status-badge submitted">Submitted</span>
+        </div>
+        <p class="paper-title">Unfolding Early Gen AI Adoption Through Discourse: A Behavior Profile and Longitudinal Perception Analysis of Young Learners' Naturalistic AI Interaction</p>
+        <p class="paper-authors">Kim, K. R.</p>
+      </article>
+    </section>
+
+    <!-- RESEARCH PIPELINE -->
+    <section class="section-group">
+      <div class="section-label">Research Pipeline</div>
+
+      <article class="paper-card pipeline">
+        <div class="paper-meta-top">
+          <span class="status-badge pipeline">Data Collected · Manuscript in Preparation</span>
+        </div>
+        <p class="paper-title">When AI Scaffolds Fade: A Longitudinal Multi-Method Analysis of Argumentative Writing Transfer and Cognitive State Degradation</p>
+        <p class="paper-authors">Kim, K. R.</p>
+      </article>
+
+      <article class="paper-card pipeline">
+        <div class="paper-meta-top">
+          <span class="status-badge pipeline">Study Design Complete · Prototype Developed</span>
+        </div>
+        <p class="paper-title">Neural Epistemic Network Dynamics of Collective Intelligence in Human-AI Teaming</p>
+        <p class="paper-authors">Kim, K. R.</p>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <span class="footer-brand">Kyungri Kim · Publications</span>
+    <ul class="footer-links">
+      <li><a href="https://cognitivecollaborator.ai/index.html">Home</a></li>
+      <li><a href="https://cognitivecollaborator.ai/about.html">About</a></li>
+      <li><a href="https://cognitivecollaborator.ai/research.html">Research</a></li>
+      <li><a href="https://cognitivecollaborator.ai/conferences.html">Conferences</a></li>
+      <li><a href="https://cognitivecollaborator.ai/projects.html">Projects</a></li>
+    </ul>
+  </footer>
+
 </body>
 </html>
