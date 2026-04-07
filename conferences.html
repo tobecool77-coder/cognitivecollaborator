@@ -1,125 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Conferences | Kyungri Kim</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conferences | Kyungri Kim</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fafaf8;
+      --surface: #ffffff;
+      --border: #e8e4de;
+      --text: #1a1a18;
+      --muted: #6b6b64;
+      --accent: #2d4a3e;
+      --accent-light: #e8f0ec;
+      --tag-bg: #f0ede8;
+      --tag-text: #4a4a42;
+      --font-display: 'Georgia', 'Times New Roman', serif;
+      --font-body: 'Palatino Linotype', 'Palatino', 'Book Antiqua', Georgia, serif;
+      --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250, 250, 248, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: normal;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-brand em { font-style: italic; color: var(--accent); }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+
+    .nav-links a {
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--accent); }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 4rem 2rem 2.5rem;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-label {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      font-weight: normal;
+      line-height: 1.2;
+    }
+
+    .page-header h1 em { font-style: italic; color: var(--accent); }
+
+    .page-header .subtitle {
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+    }
+
+    /* ── Main ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: var(--font-ui);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+
+    .section-group { margin-bottom: 3.5rem; }
+
+    /* ── Conference cards ── */
+    .conf-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.6rem 1.8rem;
+      margin-bottom: 1.25rem;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .conf-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      border-color: #cdc8c0;
+    }
+
+    .conf-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    .conf-year {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .conf-venue {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .conf-badge {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2em 0.7em;
+      border-radius: 20px;
+    }
+
+    .conf-badge.presented  { background: #e6f5ec; color: #1a6635; }
+    .conf-badge.accepted   { background: #e6f0ff; color: #2255aa; }
+    .conf-badge.poster     { background: #f0ede8; color: #5a4a30; }
+    .conf-badge.paper      { background: #e8f0ec; color: #1e4a30; }
+
+    .conf-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: normal;
+      line-height: 1.45;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .conf-authors {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .conf-desc {
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+      line-height: 1.55;
+    }
+
+    .conf-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .conf-tag {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 0.2em 0.65em;
+      border-radius: 20px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-brand {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+
+    .footer-links a {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.72rem; }
+      .page-header, main { padding-left: 1rem; padding-right: 1rem; }
+      .conf-card { padding: 1.2rem; }
+    }
+  </style>
 </head>
 <body>
-<nav class="nav"><div class="nav-i">
-  <div class="brand">Kyungri <em>Kim</em></div>
-  <button class="ham" onclick="document.querySelector('.lks').classList.toggle('open')" aria-label="menu"><span></span><span></span><span></span></button>
-  <div class="lks">
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="research.html">Research</a>
-    <a href="publications.html">Publications</a>
-    <a href="conferences.html" class="on">Conferences</a>
-    <a href="projects.html">Projects</a>
-  </div>
-</div></nav>
 
-<main class="w">
-  <div class="ph0">
-    <div class="kk">Conferences</div>
+  <!-- ── Nav ── -->
+  <nav>
+    <a href="https://cognitivecollaborator.ai/index.html" class="nav-brand">Kyungri <em>Kim</em></a>
+    <ul class="nav-links">
+      <li><a href="https://cognitivecollaborator.ai/index.html">Home</a></li>
+      <li><a href="https://cognitivecollaborator.ai/about.html">About</a></li>
+      <li><a href="https://cognitivecollaborator.ai/research.html">Research</a></li>
+      <li><a href="https://cognitivecollaborator.ai/publications.html">Publications</a></li>
+      <li><a href="https://cognitivecollaborator.ai/conferences.html" class="active">Conferences</a></li>
+      <li><a href="https://cognitivecollaborator.ai/projects.html">Projects</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Page header ── -->
+  <header class="page-header">
+    <p class="page-label">Conferences</p>
     <h1>Conference Work and <em>Research Snapshots</em></h1>
-    <p class="mu">International conference presentations and accepted work.</p>
-  </div>
+    <p class="subtitle">International conference presentations and accepted work.</p>
+  </header>
 
-  <!-- top 3 with infographics -->
-  <div class="cg" style="margin-bottom:24px">
-    <div class="c cf ca">
-      <div class="ct">
-        <div class="cyr">2026</div>
-        <div class="cv">AERA · Annual Meeting · Division C</div>
-        <h3>Project-Based Learning with Generative AI as Cognitive Collaborators</h3>
-      </div>
-      <div class="cb">
-        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-          <span class="tg g">Accepted</span>
-          <span class="tg">Kim, K. R., &amp; Kim, D. H.</span>
-        </div>
-        <p>A DBR approach to higher-order thinking. Proposes and refines a cognitive collaborator model for creativity and project-based learning.</p>
-        <p class="mt">Design-Based Research · Cognitive Collaborator Model · Creativity Framework</p>
-        <img src="assets/aera_infographic.png" alt="AERA infographic" style="width:100%;margin-top:16px;border-radius:10px;border:1px solid var(--ln)">
-      </div>
-    </div>
+  <!-- ── Main ── -->
+  <main>
 
-    <div class="c cf ce">
-      <div class="ct">
-        <div class="cyr">2025</div>
-        <div class="cv">AECT · Annual Convention · Las Vegas</div>
-        <h3>Generative AI Debate Chatbots: Transforming Critical Thinking and Argumentative Writing</h3>
-      </div>
-      <div class="cb">
-        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-          <span class="tg g">Presented</span>
-          <span class="tg">Kim, K. R., &amp; Kim, D. H.</span>
-        </div>
-        <p>Experimental study comparing AI debate chatbots and peer debate on critical thinking, engagement, and argumentative writing in elementary students.</p>
-        <p class="mt">Experiment · Toulmin Coding · HLM · DGNN Analysis</p>
-        <img src="assets/aect_infographic.png" alt="AECT infographic" style="width:100%;margin-top:16px;border-radius:10px;border:1px solid var(--ln)">
-      </div>
-    </div>
+    <!-- 2026 -->
+    <section class="section-group">
+      <div class="section-label">2026</div>
 
-    <div class="c cf cc">
-      <div class="ct">
-        <div class="cyr">2026</div>
-        <div class="cv">CSCL · Irvine, USA</div>
-        <h3>The Relationship between Argumentative Discourse Sequences with Generative AI and Students' Argumentative Writing Structure</h3>
-      </div>
-      <div class="cb">
-        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-          <span class="tg g">Poster Accepted</span>
-          
+      <!-- CSCL -->
+      <article class="conf-card">
+        <div class="conf-meta-top">
+          <span class="conf-year">2026</span>
+          <span class="conf-venue">CSCL · Irvine, USA</span>
+          <span class="conf-badge poster">Poster</span>
         </div>
-        <p>Sequence analysis of learner–AI discourse patterns and transfer into written argumentative structure in elementary learners.</p>
-        <p class="mt">Sequential Pattern Mining · ENA · Transfer Analysis</p>
-        <img src="assets/cscl_infographic.png" alt="CSCL infographic" style="width:100%;margin-top:16px;border-radius:10px;border:1px solid var(--ln)">
-      </div>
-    </div>
-  </div>
+        <p class="conf-title">The Relationship between Argumentative Discourse Sequences with Generative AI and Students' Argumentative Writing Structure</p>
+        <p class="conf-authors">Kim, K. R. (2026, Jun.)</p>
+        <p class="conf-desc">Sequence analysis of learner–AI discourse patterns and transfer into written argumentative structure in elementary learners.</p>
+        <div class="conf-tags">
+          <span class="conf-tag">Sequential Pattern Mining</span>
+          <span class="conf-tag">ENA</span>
+          <span class="conf-tag">Transfer Analysis</span>
+        </div>
+      </article>
 
-  <!-- AIED x2 -->
-  <div class="kk" style="margin-bottom:12px">Under Review</div>
-  <div class="pubs">
-    <div class="c pub">
-      <div class="ph2">
-        <h3>Epistemic Patterns in Generative AI-Supported Mathematical Problem-Posing and Their Relationship to Problem-Solving Achievement</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
-          <span class="tg g">AIED 2026</span>
-          <span class="tg">Full Paper · Under Review</span>
-          
+      <!-- AERA -->
+      <article class="conf-card">
+        <div class="conf-meta-top">
+          <span class="conf-year">2026</span>
+          <span class="conf-venue">AERA · Annual Meeting · Division C</span>
+          <span class="conf-badge paper">Paper Session</span>
         </div>
-      </div>
-      <p class="mu">Kim, K. R. (2026, Under Review). Full paper submitted to the International Conference on Artificial Intelligence in Education.</p>
-    </div>
-    <div class="c pub">
-      <div class="ph2">
-        <h3>How Young Learners Naturally Discover Generative AI: A Latent Profile and Growth Trajectory Analysis of Early AI Adopters</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
-          <span class="tg g">AIED 2026</span>
-          <span class="tg">Full Paper · Under Review</span>
-          
+        <p class="conf-title">Project-Based Learning with Generative AI as Cognitive Collaborators: A DBR Approach to Higher-Order Thinking</p>
+        <p class="conf-authors">Kim, K. R., &amp; Kim, D. H. (2026, Apr.)</p>
+        <p class="conf-desc">A DBR approach to higher-order thinking. Proposes and refines a cognitive collaborator model for creativity and project-based learning.</p>
+        <div class="conf-tags">
+          <span class="conf-tag">Design-Based Research</span>
+          <span class="conf-tag">Cognitive Collaborator Model</span>
+          <span class="conf-tag">Creativity Framework</span>
         </div>
-      </div>
-      <p class="mu">Kim, K. R. (2026, Under Review). Full paper submitted to the International Conference on Artificial Intelligence in Education.</p>
-    </div>
-  </div>
-</main>
+      </article>
+    </section>
 
-<footer>
-  <div class="c ft">
-    <p>Kyungri Kim · Educational Technology Researcher</p>
-    <div class="ftl">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="research.html">Research</a>
-      <a href="publications.html">Publications</a>
-      <a href="projects.html">Projects</a>
-    </div>
-  </div>
-</footer>
+    <!-- 2025 -->
+    <section class="section-group">
+      <div class="section-label">2025</div>
+
+      <!-- AECT -->
+      <article class="conf-card">
+        <div class="conf-meta-top">
+          <span class="conf-year">2025</span>
+          <span class="conf-venue">AECT · International Convention · Las Vegas</span>
+          <span class="conf-badge presented">Presented</span>
+        </div>
+        <p class="conf-title">Generative AI Debate Chatbots: Transforming Critical Thinking and Argumentative Writing</p>
+        <p class="conf-authors">Kim, K. R., &amp; Kim, D. H. (2025, Oct.)</p>
+        <p class="conf-desc">Experimental study comparing AI debate chatbots and peer debate on critical thinking, engagement, and argumentative writing in elementary students.</p>
+        <div class="conf-tags">
+          <span class="conf-tag">Experiment</span>
+          <span class="conf-tag">Toulmin Coding</span>
+          <span class="conf-tag">HLM</span>
+          <span class="conf-tag">DGNN Analysis</span>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <span class="footer-brand">Kyungri Kim · Educational Technology Researcher</span>
+    <ul class="footer-links">
+      <li><a href="https://cognitivecollaborator.ai/index.html">Home</a></li>
+      <li><a href="https://cognitivecollaborator.ai/about.html">About</a></li>
+      <li><a href="https://cognitivecollaborator.ai/research.html">Research</a></li>
+      <li><a href="https://cognitivecollaborator.ai/publications.html">Publications</a></li>
+      <li><a href="https://cognitivecollaborator.ai/projects.html">Projects</a></li>
+    </ul>
+  </footer>
+
 </body>
 </html>
